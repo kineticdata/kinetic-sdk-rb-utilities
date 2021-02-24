@@ -1,0 +1,9 @@
+Gemfile.lock
+
+# Exclude vendor and data directories
+data
+vendor
+
+# Exclude config files to prevent accidentally committing them
+config.yaml
+config.yml
