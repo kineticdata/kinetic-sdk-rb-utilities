@@ -1,0 +1,3 @@
+Name,Email Address,User Id,Phone Number,Is Admin,Teams,Manager
+John Doe,jdoe@example.com,jdoe,555-1212,TRUE,"Role::Employee,Default",jsmith
+Jane Smith,jsmith@example.com,jsmith,888-2222,FALSE,"Role::Employee,Default",jdoe

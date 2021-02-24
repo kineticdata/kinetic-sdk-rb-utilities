@@ -44,31 +44,51 @@ core_space = KineticSdk::Core.new({
   }
 })
 
-count = 0
+success_count = 0
+error_count = 0
 
+# Loop over each row of the CSV file
 CSV.foreach(USER_FILE, :headers => true) do |row|
     
     # Create a map of applicable attributes
     attributesMap = {
-      "Location" => ["#{row["Location"]}"]
+      "Manager" => ["#{row["Manager"]}"]
     }
+
+    profileAttributesMap = {
+      "Phone Number" => ["#{row["Phone Number"]}"]
+    }
+
+    memberships = row["Teams"].split(",").map do |team|
+      {"team" => {"name" => team}}
+    end
 
     # Build up user object
     user = {
-        "username"    => row["User ID"],
-        "displayName" => row["Name"],
-        "email"       => row["Email Address"],
-        "attributesMap" => attributesMap,
-
+        "username"              => row["User Id"],
+        "displayName"           => row["Name"],
+        "email"                 => row["Email Address"],
+        "attributesMap"         => attributesMap,
+        "profileAttributesMap"  => profileAttributesMap,
+        "spaceAdmin"            => row["Is Admin"].downcase == "true" ? true : false,
+        "memberships"           => memberships
     }
-    
+        
     # Create the user
     response = core_space.add_user(user).content
     
     # Log outcome
     if response['error'] 
         logger.error "Error Creating #{row['username']}: #{response['error']}" 
+        error_count += 1
     else
         logger.info "Successfully Created #{row['username']}"
+        success_count += 1
     end 
+end
+
+# Log count of successes
+logger.info "Successfully Imported #{success_count} Users."
+if error_count > 0
+  logger.info "There were errors importing #{error_count} users ."
 end
