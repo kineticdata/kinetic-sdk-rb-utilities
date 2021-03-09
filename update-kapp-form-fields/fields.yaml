@@ -1,0 +1,20 @@
+# The format of this file is a list of field names, and map of properties
+# that need to be updated.
+#
+# - Field Name 1:
+#     property name 1: Property Value
+#     property name 2: Another Value
+# - Field Name 2
+#     property name 1: Property Value 2
+#     property name 2: Another Value 2
+# 
+# For Example:
+# 
+# - Requested For:
+#     required: true
+#     requiredMessage: Please search and select a user before submitting
+#
+---
+- Requested For:
+    required: true
+    requiredMessage: Please search and select a user before submitting
