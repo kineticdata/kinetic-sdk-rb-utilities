@@ -33,27 +33,18 @@ rescue
 end
 
 
-# setup logging
-@logger = TeeLogger::TeeLogger.new(STDOUT, "#{PWD}/output.log")
-@logger.level = config["LOG_LEVEL"].to_s.downcase == "debug" ? Logger::DEBUG : Logger::INFO
-
-
-# initalize the totals
-@updated, @skipped, @failed = [], [], []
-
-
 # Check the specified element to see if it matches the field to update.
 # Recurses if the element is a page or section element.
 def process_element(element, field_name, field_properties)
   # flag to indicate an update was made
   is_updated = false
   # check if this element is a container for sub-elements (page, section)
-  if element.has_key?("elements")
+  if element.has_key?("elements") && element["elements"].size > 0
     element["elements"].each do |child_element|
       child_element, is_updated = process_element(child_element, field_name, field_properties)
       break if is_updated
     end
-  elsif element["name"] == field_name
+  elsif element["type"] == "field" && element["name"] == field_name
     field_properties.each do |property_name, property_value|
       # update the property if it currently doesn't match the desired value
       if element[property_name] != property_value
@@ -114,8 +105,12 @@ def process_kapp_forms(updated_fields, conn, kapp_slug, params={})
 end
 
 
-# Start
-@logger.info("Processing forms in the \"#{kapp_slug}\" kapp")
+# Setup logging
+@logger = TeeLogger::TeeLogger.new(STDOUT, "#{PWD}/output.log")
+@logger.level = config["LOG_LEVEL"].to_s.downcase == "debug" ? Logger::DEBUG : Logger::INFO
+
+# Initalize the arrays that will hold the results
+@updated, @skipped, @failed = [], [], []
 
 # Create space connection
 conn = KineticSdk::Core.new({
@@ -127,10 +122,11 @@ conn = KineticSdk::Core.new({
 })
 
 # Process the forms
+@logger.info("Processing forms in the \"#{kapp_slug}\" kapp")
 process_kapp_forms(updated_fields, conn, kapp_slug, { "limit" => 100 })
 
 
-# Log Statistics
+# Log Results
 if @failed.size > 0
   @logger.info("Failed to update #{@failed.size} #{@failed.size == 1 ? "form" : "forms"} in the \"#{kapp_slug}\" kapp")
   @failed.each { |form| @logger.info("  Failed \"#{form["slug"]}\", reason: #{error["error"]["message"]}") }
