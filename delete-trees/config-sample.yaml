@@ -1,0 +1,5 @@
+SPACE_URL: https://<YOUR_SPACE>.kinops.io
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+LIMIT: "100" #Limit of records to return (there is no pagination)
+LOG_LEVEL: INFO # {OFF, INFO, or DEBUG}
