@@ -53,24 +53,44 @@ DATASTORE_CORE_STATES = ["Draft", "Submitted"]
 LIMIT = 1000
 SUBMISSION_COUNTS = []
 
-# Helper method for counting actual submissions and writing them to gloabl array
+# Helper method for counting actual submissions and writing them to gloabl array.
+# Purpously not using the find all submissions methods in the SDK as they keep all submissions in memory
+# and we only need the counts
+
+# TODO - Time bucket closed submissions by month to make the queries more efficient on the server
 def count_submissions(query)
   kapp_slug = query["kapp_slug"]
   form_slug = query["form_slug"]
   datastore = query["datastore"]
-  count = []
+  counts = []
   if datastore
-    count = Parallel.map(DATASTORE_CORE_STATES) do |coreState|
+    counts = Parallel.map(DATASTORE_CORE_STATES) do |coreState|
       params = {"coreState" => coreState, "limit" => LIMIT}
-      CORE_SDK.find_all_form_datastore_submissions(form_slug, params).content["submissions"].count
+      response = CORE_SDK.find_form_datastore_submissions(form_slug, params)
+      count = response.content["submissions"].size
+
+      while (!response.content["nextPageToken"].nil?)
+        params['pageToken'] = response.content["nextPageToken"]
+        response = CORE_SDK.find_form_datastore_submissions(form_slug, params)
+        count += response.content["submissions"].size
+      end
+      count
     end
   else
-    count = Parallel.map(KAPP_CORE_STATES) do |coreState|
+    counts = Parallel.map(KAPP_CORE_STATES) do |coreState|
       params = {"coreState" => coreState, "limit" => LIMIT}
-      CORE_SDK.find_all_form_submissions(kapp_slug, form_slug, params).content["submissions"].count
+      response = CORE_SDK.find_form_submissions(kapp_slug, form_slug, params)
+      count = response.content["submissions"].size
+
+      while (!response.content["nextPageToken"].nil?)
+        params['pageToken'] = response.content["nextPageToken"]
+        response = CORE_SDK.find_form_submissions(kapp_slug, form_slug, params)
+        count += response.content["submissions"].size
+      end
+      count
     end
   end
-  SUBMISSION_COUNTS.push({"kapp_slug" => datastore ? "datastore" : kapp_slug, "form_slug" => form_slug, "count" => count.sum})
+  SUBMISSION_COUNTS.push({"kapp_slug" => datastore ? "datastore" : kapp_slug, "form_slug" => form_slug, "count" => counts.sum})
 end
 
 # Method to return count of all submissions for a given kapp form
