@@ -25,49 +25,51 @@ end
 @logger.level = config["LOG_LEVEL"].to_s.downcase == "debug" ? Logger::DEBUG : Logger::INFO
 
 # Create space connection
-conn = KineticSdk::Task.new({
+conn = KineticSdk::Core.new({
+  space_server_url: config["SERVER_URL"],
+  #app_server_url: config["SPACE_URL"],
+  space_slug: config["SPACE_SLUG"],
   username: config["SPACE_USERNAME"],
   password: config["SPACE_PASSWORD"],
-  app_server_url: "#{config["SPACE_URL"]}/app/components/task",
   options: {
-	log_level: config["LOG_LEVEL"],
-	log_output: "stderr"
+    log_level: config["LOG_LEVEL"],
+    log_output: "stderr"
   }
 })
 
 parameters = {
+  "q" => config["QUERY"],
   "direction" => "DESC",
   "limit" => config["LIMIT"],
+  "include" => "values"
 }
 
 
 # Get Trees
-response =  conn.find_trees(parameters)
-if response.content['trees'].length > 0
-	puts "#{response.content['trees'].length} trees were found on #{config["SPACE_URL"]}."
-	puts "Would you like to delete them *ALL*? (Y/N)"
+response =  conn.find_form_submissions(config["KAPP_SLUG"], config["FORM_SLUG"], parameters)
+logger.info JSON.pretty_generate(response.content['submissions'])
+
+
+if response.content['submissions'].length > 0
+	puts "#{response.content['submissions'].length} submissions were found on #{config["SPACE_URL"]}."
+	puts "Would you like to update them *ALL*? (Y/N)"
 	STDOUT.flush
 	case (gets.downcase.chomp)
 	when 'y'
-	  puts "Deleting Trees"
+	  puts "Updating Submissions"
 	  STDOUT.flush
 	else
 	  abort "Exiting"
 	end
-
-  # Delete Trees
-	response.content['trees'].each{ |tree| 
-    conn.delete_tree({
-           "source_name" => tree['sourceName'],
-           "group_name" => tree['sourceGroup'],
-           "tree_name" => tree['name']
-         })
+  # Update Submissions
+	response.content['submissions'].each{ |submission| 
+    conn.update_submission(submission['id'], body={"values": config["VALUES"]})
 	}
 else
-	puts "No trees were found"
+	puts "No submissions were found"
 	STDOUT.flush
 end
-puts "Finished deleting the trees"
+puts "Finished"
 
 
 
