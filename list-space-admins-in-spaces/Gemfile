@@ -1,0 +1,5 @@
+source "https://rubygems.org"
+
+gem "kinetic_sdk"
+gem "teelogger"
+gem "csv"

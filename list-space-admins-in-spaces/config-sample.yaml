@@ -1,0 +1,4 @@
+SYSTEM_URL: https://mykineticserver.company.com
+SYSTEM_USERNAME: 
+SYSTEM_PASSWORD: 
+LOG_LEVEL: off # off, info, debug

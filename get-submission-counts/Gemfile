@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'kinetic_sdk'
+gem 'logger'
+gem 'parallel'
+gem 'optparse'
+gem 'csv'
