@@ -1,0 +1,7 @@
+SPACE_URL: https://demo.kinops.io
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+START: "2019-06-28T12:00:00Z" #Start time for paused trigger query
+END: "2022-06-28T12:00:00Z" # End time for paused trigger query
+LIMIT: "100" #Limit of records to return (there is no pagination)
+
