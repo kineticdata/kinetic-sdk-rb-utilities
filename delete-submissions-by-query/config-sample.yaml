@@ -1,0 +1,12 @@
+# server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+SERVER_URL: 
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+SPACE_SLUG: 
+KAPP_SLUG: 
+FORM_SLUG: #Empty value for Kapp Query or provide a Form Slug for a Form Query
+#QUERY: values[Field One] = "value" AND values[Status]="active"
+QUERY:
+VALUES: {"Status": "inactive"} # Object of Field Value Pairs to update
+LIMIT: "100" #Limit of records to return (there is no pagination)
+LOG_LEVEL: INFO # {OFF, INFO, or DEBUG}
