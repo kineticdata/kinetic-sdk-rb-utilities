@@ -4,7 +4,8 @@ SPACE_USERNAME:
 SPACE_PASSWORD: 
 SPACE_SLUG: 
 KAPP_SLUG: 
-FORM_SLUG: #Empty value for Kapp Query or provide a Form Slug for a Form Query
+#Empty value for Kapp Query or provide a Form Slug for a Form Query
+FORM_SLUG: 
 #QUERY: values[Field One] = "value" AND values[Status]="active"
 QUERY:
 VALUES: {"Status": "inactive"} # Object of Field Value Pairs to update
