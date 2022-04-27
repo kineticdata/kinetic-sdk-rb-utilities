@@ -38,12 +38,11 @@ conn = KineticSdk::Core.new({
 })
 
 parameters = {
-  "q" => config["QUERY"],
+  "q" => (config["QUERY"] if !config["QUERY"].nil?),
   "direction" => "DESC",
   "limit" => config["LIMIT"],
   "include" => "values"
-}
-
+}.compact
 
 # Get Trees
 response =  conn.find_form_submissions(config["KAPP_SLUG"], config["FORM_SLUG"], parameters)
