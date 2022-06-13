@@ -6,7 +6,7 @@ This repository is a collection of commonly needed scripts for interacting with 
 
 - [Importing Users From CSV](./import-users/README.md)
 - [Remove Users From Team](./remove-users-from-team/README.md)
-- [Find User Across Multiple Spaces With System API](./find-user-in-spaces/README.md)
+- [Find User Across Multiple Spaces With System API and optionally remove them](./find-user-in-spaces/README.md)
 
 ## Forms
 

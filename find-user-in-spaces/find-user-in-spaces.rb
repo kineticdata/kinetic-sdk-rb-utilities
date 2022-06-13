@@ -8,11 +8,14 @@ OptionParser.new do |opts|
   opts.on("--user [User]", "User") do |v|
     options[:user] = v
   end
+  opts.on("--remove [Remove User]", "Remove") do |v|
+    options[:remove] = v
+  end
 end.parse!
 
 raise "A user must be specified with the --user [User] option" if options[:user].nil?
 user = options[:user]
-
+remove = options[:remove] && options[:remove].downcase == "true" ? true : false
 
 # find the directory of this script
 PWD = File.expand_path(File.dirname(__FILE__))
@@ -29,6 +32,7 @@ end
 # setup logging
 @logger = TeeLogger::TeeLogger.new(STDOUT, "#{PWD}/output.log")
 @logger.level = config["LOG_LEVEL"].to_s.downcase == "debug" ? Logger::DEBUG : Logger::INFO
+@logger.info("Running in REMOVE mode") if remove
 
 
 # Create space connection
@@ -50,12 +54,20 @@ spaces.each do |space|
   users = conn.find_users_in_system(space["slug"], {"q" => "username =* \"#{user}\" OR displayName =* \"#{user}\" OR email =* \"#{user}\""}).content['users']
   if users.size > 0 
     found_spaces.push(space)
+    if remove
+      @logger.info("Removing user found in #{space["slug"]}")
+      users.each do |user|
+        user_with_space_slug = user
+        user_with_space_slug["space_slug"] = space["slug"]
+        conn.delete_user(user_with_space_slug)
+      end
+    end
   end
 end
 
 # Log Statistics
 if found_spaces.size > 0
-  @logger.info("User #{user} found in #{found_spaces.size}")
+  @logger.info("User #{user} #{remove ? " removed" : " found"} in #{found_spaces.size}")
   found_spaces.each { |space| @logger.info("  \"#{space["name"]} - #{space["slug"]}\"") }
 
   @logger.info("Here's a little more usable format :) ")
