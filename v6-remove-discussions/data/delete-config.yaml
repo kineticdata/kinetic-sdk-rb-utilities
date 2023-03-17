@@ -1,0 +1,60 @@
+task:
+  trees:
+    - "Kinetic Request CE :: Teams :: Created"
+    - "Kinetic Request CE :: Teams :: Employee Membership Change"
+    - "Kinetic Request CE :: Teams :: Team Membership Change"
+    - "Kinetic Request CE :: Submissions > services > comment :: Submitted"
+  routines:
+    - Discussion Delete
+    - Discussion Create
+    - Discussion Retrieve
+    - Discussion Update
+    - Discussion Archive
+    - Discussion Unarchive
+    - Invitation Create
+    - Invitation Delete
+    - Invitation Retrieve
+    - Invitations Retrieve List
+    - Invitation Update
+    - Message Create
+    - Message Delete
+    - Message Retrieve
+    - Messages Retrieve List
+    - Message Update
+    - Participant Delete
+    - Participant Retrieve
+    - Discussions Retrieve List
+    - Participant Create
+    - Participant Update
+    - Participants Retrieve List
+    - Related Item Create
+    - Related Item Delete
+    - Related Items Retrieve List
+    - Related Item Retrieve
+    - Discussion Message to Form Owning Team Create
+    - Queue Task Relate Origin Submission Discussion
+  sources:
+    - Kinetic Discussions
+  handlers:
+    - kinetic_discussions_api_v1
+space:
+  webhooks:
+    - Discussion Invitation Created
+    - Discussion Invitation Updated
+    - Discussion Notification Created
+    - Team Created
+  attributes:
+    - Discussion Id
+    - Discussion Server Url
+teams:
+  attributes:
+    - Discussion Id
+kapps:
+  attributes:
+    kapp:
+      - Discussion Id
+      - Discussion Server Url
+    category:
+      - Disucssion Id
+    form:
+      - Discussion Id

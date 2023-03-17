@@ -1,0 +1,23 @@
+# This file is used to configure which objects are modified as part of the migration
+
+kapps:
+  forms:
+    field:
+      - Discussion Id
+task:
+  trees:
+    - 
+      current: "Kinetic Request CE :: Submissions > queue :: Created"
+      filename: submissions---queue.created.xml
+    -
+      current: "Kinetic Request CE :: Submissions > queue > cancel :: Created"
+      filename: submissions---queue---cancel.created.xml
+    - 
+      current: "Kinetic Request CE :: Submissions > services > request-to-cancel :: Submitted"
+      filename: submissions---services---request-to-cancel.submitted.xml
+    - 
+      current: "- :: - :: Queue Assignment Validate"
+      filename: queue-assignment-validate.xml
+    - 
+      current: "- :: - :: Queue Task Create"
+      filename: queue-task-create.xml
