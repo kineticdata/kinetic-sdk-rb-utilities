@@ -1,33 +1,11 @@
-# Import Users
-This script is used to import users from a CSV file
+# Remove Discussions
+This script is used to check if spaces can be safely upgraded to v6 and if so, remove upgrades.
 
 ## Instructions
 1. Create a copy of the config-sample.yaml file and naming it config.yaml. Next, update the values inside this file to point to the right Kinetic Platform Environment
 
-2. Add the CSV of users you'd like to import inside the `./data` directory and name the file `users.csv`
+2. Run the preflight-check.rb file against the space you're trying to migrate. It will DOES NOT modify any data `ruby preflight-check`
 
-3. Update the [import-users.rb](import-users.rb) script and find the  to map the CSV header values to a valid Kinetic Platform User property. 
+3. Check the output.log to see if there are any warnings about migrating.
 
-For Example:
-
-```ruby
-    # Create a map of applicable attributes
-    attributesMap = {
-      "Manager" => ["#{row["Manager"]}"]
-    }
-
-    profileAttributesMap = {
-      "Phone Number" => ["#{row["Phone Number"]}"]
-    }
-
-    # Build up user object
-    user = {
-        "username"              => row["User ID"],
-        "displayName"           => row["Name"],
-        "email"                 => row["Email Address"],
-        "attributesMap"         => attributesMap,
-        "profileAttributesMap"  => profileAttributesMap,
-        "spaceAdmin"            => row["Is Admin"].downcase == "true" ? true : false,
-    }
-
-```
+4. If no warnings and you've tested against a non-production environment, run `ruby remove-discussions.rb` to migrate the workflow changes and remove the objects that are no longer needed.
