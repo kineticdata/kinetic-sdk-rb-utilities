@@ -36,7 +36,6 @@ conn = KineticSdk::Task.new({
 })
 
 parameters = {
-  "direction" => "DESC",
   "limit" => config["LIMIT"],
 }
 

@@ -1,6 +1,6 @@
 # Update Kapp Form Fields
 
-This script is used to unpause triggers between a user defined start and end date
+This script is used to delete all trees and routines
 
 ## Instructions
 
@@ -9,5 +9,5 @@ This script is used to unpause triggers between a user defined start and end dat
 3. Run the [unpause-triggers.rb](unpause-triggers.rb) script.
 
 ```sh
-unpause-triggers.rb 
+delete-trees.rb 
 ```
