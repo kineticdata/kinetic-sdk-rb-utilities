@@ -16,8 +16,17 @@ task:
       current: "Kinetic Request CE :: Submissions > services > request-to-cancel :: Submitted"
       filename: submissions---services---request-to-cancel.submitted.xml
     - 
+      current: "Kinetic Request CE :: Forms > survey :: Created"
+      filename: forms---survey.created.xml
+    - 
+      current: "Kinetic Request CE :: Forms > survey :: Updated"
+      filename: forms---survey.updated.xml
+    - 
       current: "- :: - :: Queue Assignment Validate"
       filename: queue-assignment-validate.xml
     - 
       current: "- :: - :: Queue Task Create"
       filename: queue-task-create.xml
+    - 
+      current: "- :: - :: Handler Failure Error Process"
+      filename: handler-failure-error-process.xml

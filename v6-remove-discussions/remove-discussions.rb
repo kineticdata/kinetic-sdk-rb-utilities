@@ -109,6 +109,12 @@ delete["task"]["sources"].each do |source_name|
   logger.info "Sources successfully deleted"
 end
 
+# Delete Task Categories
+delete["task"]["categories"].each do |source_name|
+  conn_task.delete_category(source_name)
+  logger.info "Task Categories successfully deleted"
+end
+
 # Delete Space Webhooks
 delete["space"]["webhooks"].each do |name|
   core_space.delete_webhook_on_space(name)

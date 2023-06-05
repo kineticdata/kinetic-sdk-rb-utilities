@@ -1,0 +1,302 @@
+<tree schema_version="1.0">
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Forms > survey</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version="" schema_version="1.0" version="">
+        <name>Updated</name>
+        <author></author>
+        <notes></notes>
+        <lastID>45</lastID>
+        <request>
+            <task definition_id="system_start_v1" id="start" name="Start" x="198" y="23">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Is Survey" type="Complete" value=" @form['Type'] == &quot;Survey&quot;">system_noop_v1_31</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_31" name="Is Survey" x="517" y="23">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_44</task>
+                    <task label="" type="Complete" value="">routine_kinetic_solutions_survey_status_validate_v1_43</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_32" name="Has new polling" x="220" y="245">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">system_join_v1_42</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_33" name="Removed Polling" x="836.7118" y="257.14536">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_datastore_submission_retrieve_by_query_v1_35</task>
+                </dependents>
+            </task>
+            <task definition_id="system_noop_v1" id="system_noop_v1_34" name="Adjusted Polling" x="517" y="256">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters></parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_datastore_submission_retrieve_by_query_v1_37</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_35" name="Get Poller to Delete" x="837.9824" y="371.2456">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Datastore Form Slug" label="Datastore Form Slug" menu="" required="true" tooltip="">robot-definitions</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Index To Search" label="Index To Search" menu="" required="true" tooltip="">values[Robot Name]</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Query" label="Query" menu="" required="true" tooltip="">values[Robot Name] = "&lt;%= @form['Slug'] %&gt; poller"</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Found robot definition" type="Complete" value="!@results['Get Poller to Delete']['Id'].nil?">routine_kinetic_datastore_submission_delete_v1_36</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_delete_v1" id="routine_kinetic_datastore_submission_delete_v1_36" name="Remove Poller" x="842.0226" y="514.2582">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to delete">&lt;%= @results['Get Poller to Delete']['Id'] %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="routine_datastore_submission_retrieve_by_query_v1" id="routine_datastore_submission_retrieve_by_query_v1_37" name="Get Poller to Update" x="522" y="361">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Datastore Form Slug" label="Datastore Form Slug" menu="" required="true" tooltip="">robot-definitions</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Index To Search" label="Index To Search" menu="" required="true" tooltip="">values[Robot Name]</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Query" label="Query" menu="" required="true" tooltip="">values[Robot Name] = "&lt;%= @form['Slug'] %&gt; poller"</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Found robot definition" type="Complete" value="!@results['Get Poller to Update']['Id'].nil?">utilities_echo_v1_39</task>
+                    <task label="None Found" type="Complete" value="@results['Get Poller to Update']['Id'].nil?">system_join_v1_42</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_update_v1" id="routine_kinetic_datastore_submission_update_v1_38" name="Update Poller" x="530" y="598">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Id" label="Id" menu="" required="true" tooltip="The id of the submission to update">&lt;%= @results['Get Poller to Update']['Id'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Core State" label="Updated - Core State" menu="" required="false" tooltip="The submissions core state"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Name" label="Updated - Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Current Page Navigation" label="Updated - Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Updated - Values JSON" label="Updated - Values JSON" menu="" required="false" tooltip="A JSON representation of the submissions values">&lt;%=  pollingInfo = JSON.parse(@results['Get Polling Info-New']['output'])
+values = {}
+values["Robot Name"] = @form['Slug'] + " poller" 
+values["Interval"] = pollingInfo["Interval"]
+values["Description"] = "Used for polling source for survey"
+values["Recurrence"] = "minutely"
+values["Recurrence Label"] = "minutely"
+values["Recurrence Description"] = "Every #{pollingInfo["Interval"]} minutes"
+values["Notify Upon Each Run Completion"] = "No"
+values["Status"] = "Active"
+values["Start Date"] = DateTime.now
+values["Category"] = "Survey Poller"
+values["Task Tree"] = pollingInfo["Source"]
+runtime = {}
+runtime["Survey Slug"] = @form['Slug']
+runtime["Kapp Slug"] = @kapp['Slug'] 
+values["Runtime Inputs"] = runtime.to_json
+values.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_39" name="Get Polling Info-New" x="527" y="484">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  output = JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]
+output.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_datastore_submission_update_v1_38</task>
+                </dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_40" name="Get Polling Info" x="230" y="467">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%=  output = JSON.parse(@form_attributes['Survey Configuration'])["Event Polling"]
+output.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">routine_kinetic_datastore_submission_create_v1_41</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_datastore_submission_create_v1" id="routine_kinetic_datastore_submission_create_v1_41" name="Create Poller" x="230" y="582">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Form Slug" label="Form Slug" menu="" required="true" tooltip="The slug of the Form to create the submission in">robot-definitions</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Name" label="Current Page Name" menu="" required="false" tooltip="The page to set the submission to"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Page Navigation" label="Current Page Navigation" menu="" required="false" tooltip="The direction of the next page (next or previous)"></parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Values JSON" label="Values JSON" menu="" required="false" tooltip="A JSON Map of values to set into the submissions fields">&lt;%=  values = {"Days"=&gt;[],"Discussion Id"=&gt;nil,"Embedded"=&gt;nil,"Embedded Display Mode"=&gt;nil,"End Date"=&gt;nil,"End Date Original"=&gt;nil,"Execution Hour"=&gt;nil,"Execution Minute"=&gt;"00","Friday Index"=&gt;[],"Interval"=&gt;"1","Monday Index"=&gt;[],"Months"=&gt;[],"Notify Upon Each Run Completion"=&gt;"No","Notify Upon Schedule Completion"=&gt;nil,"Run Completion Notification Message Template"=&gt;nil,"Run Completion Recipient"=&gt;nil,"Saturday Index"=&gt;[],"Schedule Completion Notification Message Template"=&gt;nil,"Schedule Completion Recipient"=&gt;nil,"Sunday Index"=&gt;[],"Thursday Index"=&gt;[],"Timing"=&gt;nil,"Tuesday Index"=&gt;[],"Wednesday Index"=&gt;[],"Weekdays"=&gt;[]}
+
+pollingInfo = JSON.parse(@results['Get Polling Info']['output'])
+values["Robot Name"] = @form['Slug'] + " poller" 
+values["Interval"] = pollingInfo["Interval"]
+values["Description"] = "Used for polling source for survey"
+values["Recurrence"] = "minutely"
+values["Recurrence Label"] = "minutely"
+values["Recurrence Description"] = "Every #{pollingInfo["Interval"]} minutes"
+values["Notify Upon Each Run Completion"] = "No"
+values["Status"] = "Active"
+values["Start Date"] = DateTime.now
+values["Category"] = "Survey Poller"
+values["Task Tree"] = pollingInfo["Source"]
+runtime = {}
+runtime["Survey Slug"] = @form['Slug']
+runtime["Kapp Slug"] = @kapp['Slug'] 
+values["Runtime Inputs"] = runtime.to_json
+values.to_json %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="system_join_v1" id="system_join_v1_42" name="None Found-Create New" x="221" y="362">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="type" label="Type:" menu="All,Any,Some" required="true" tooltip="How many dependents must be completed before continuing?">Any</parameter>
+                    <parameter dependsOnId="type" dependsOnValue="Some" id="number" label="Number:" menu="" required="false" tooltip="If some, how many?"></parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="" type="Complete" value="">utilities_echo_v1_40</task>
+                </dependents>
+            </task>
+            <task definition_id="routine_kinetic_solutions_survey_status_validate_v1" id="routine_kinetic_solutions_survey_status_validate_v1_43" name="Handle Survey Status" x="865.3243" y="27.639809">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="Survey Slug" label="Survey Slug" menu="" required="true" tooltip="">&lt;%=  @form['Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Kapp Slug" label="Kapp Slug" menu="" required="true" tooltip="">&lt;%=  @kapp['Slug'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Previous Config" label="Previous Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes_previous['Survey Configuration'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Config" label="Current Config" menu="" required="true" tooltip="">&lt;%=  @form_attributes['Survey Configuration'] %&gt;</parameter>
+                    <parameter dependsOnId="" dependsOnValue="" id="Current Status" label="Current Status" menu="" required="true" tooltip="">&lt;%=  @form['Status'] %&gt;</parameter>
+                </parameters>
+                <messages>
+                    <message type="Complete"></message>
+                </messages>
+                <dependents></dependents>
+            </task>
+            <task definition_id="utilities_echo_v1" id="utilities_echo_v1_44" name="Check Polling" x="513" y="127">
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>true</visible>
+                <parameters>
+                    <parameter dependsOnId="" dependsOnValue="" id="input" label="Input" menu="" required="true" tooltip="">&lt;%= 
+# Parse the current and previous configs
+current_config = @form_attributes['Survey Configuration'].to_s.empty? ? {} : JSON.parse(@form_attributes['Survey Configuration'])
+prev_config = @form_attributes_previous['Survey Configuration'].to_s.empty? ? {} : JSON.parse(@form_attributes_previous['Survey Configuration'])
+
+# Determine if polling is enabled
+current_has_polling = current_config.has_key?('Event Polling') &amp;&amp; current_config["Event Polling"]["Poll"].to_s.downcase == "true" 
+prev_has_polling = prev_config.has_key?('Event Polling') &amp;&amp; prev_config["Event Polling"]["Poll"].to_s.downcase == "true"
+
+# Calculate polling values
+current_polling_values = current_has_polling ? current_config["Event Polling"] : {}
+prev_polling_values = prev_has_polling ? prev_config["Event Polling"] : {}
+
+# Determine Current Survey Status
+current_status = @form['Status']
+prev_status = @form_previous['Status']
+
+# Build variable to store result
+polling = ""
+if (current_status == "Active" &amp;&amp; prev_status == "Active")
+  if (!prev_has_polling &amp;&amp; current_has_polling)
+    polling = "new"
+  #elsif current_polling_values != prev_polling_values 
+  elsif current_has_polling &amp;&amp; current_polling_values != prev_polling_values 
+    polling = "update"
+  elsif prev_has_polling &amp;&amp; !current_has_polling
+    polling = "remove"
+  else
+    polling = "none"
+  end
+elsif current_status == "Inactive"
+  polling = "remove"
+elsif current_status == "Active" &amp;&amp; prev_status == "Inactive" &amp;&amp; current_has_polling
+  polling = "new"
+end
+
+  
+polling %&gt;</parameter>
+                </parameters>
+                <messages></messages>
+                <dependents>
+                    <task label="Has new polling" type="Complete" value="@results['Check Polling']['output'] == &quot;new&quot;">system_noop_v1_32</task>
+                    <task label="Removed Polling" type="Complete" value="@results['Check Polling']['output'] == &quot;remove&quot;">system_noop_v1_33</task>
+                    <task label="Adjusted Polling" type="Complete" value="@results['Check Polling']['output'] == &quot;update&quot;">system_noop_v1_34</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>

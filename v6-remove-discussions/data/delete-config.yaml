@@ -35,6 +35,8 @@ task:
     - Queue Task Relate Origin Submission Discussion
   sources:
     - Kinetic Discussions
+  categories:
+    - Discussions
   handlers:
     - kinetic_discussions_api_v1
 space:
