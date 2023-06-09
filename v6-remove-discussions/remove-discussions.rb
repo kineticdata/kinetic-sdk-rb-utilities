@@ -133,6 +133,11 @@ delete["teams"]["attributes"].each do |name|
   logger.info "Team attributes successfully deleted"
 end
 
+# Remove Discussion Attributes from Space
+attributesMap = {}
+delete["space"]["attributes"].each{ |attribute| attributesMap[attribute]=[] }
+core_space.update_space({"attributesMap"=> attributesMap}.to_json )
+
 # Cleanup Kapps
 kapp_slugs = core_space.find_kapps.content["kapps"].collect{|k| k["slug"]}
 kapp_slugs.each do |kapp|
@@ -151,6 +156,12 @@ kapp_slugs.each do |kapp|
     core_space.delete_form_attribute_definition(kapp, name)
     logger.info "Kapp #{kapp} form attributes successfully deleted"
   end
+  # Remove Discussion Attributes from the Kapp
+  attributesMap = {}
+  delete["kapps"]["attributes"]["kapp"].each{ |attribute| attributesMap[attribute]=[] }
+  core_space.update_kapp(kapp,{"attributesMap"=> attributesMap}.to_json )
 end
 
-## TODO ## - Remove Discussion ID from all forms??
+## TODO ## 
+#- Remove Discussion ID fields from all forms??
+#- Remove Discussion ID attribute values from all forms??
