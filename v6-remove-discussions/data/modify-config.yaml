@@ -30,3 +30,6 @@ task:
     - 
       current: "- :: - :: Handler Failure Error Process"
       filename: handler-failure-error-process.xml
+    - 
+      current: "- :: - :: Admin Kapp Submission Config"
+      filename: handler-failure-error-process.xml

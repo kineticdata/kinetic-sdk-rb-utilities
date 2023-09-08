@@ -1,0 +1,5 @@
+SPACE_URL: https://playground-brian-peterson.kinopsdev.io
+SPACE_SLUG: playground-brian-peterson
+SPACE_USERNAME: brian.peterson@kineticdata.com
+SPACE_PASSWORD: kinetic
+LOG_LEVEL: info

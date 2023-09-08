@@ -48,6 +48,9 @@ space:
   attributes:
     - Discussion Id
     - Discussion Server Url
+  webhooks:
+    - Team Membership Change
+    - Employee Membership Change
 teams:
   attributes:
     - Discussion Id
@@ -60,3 +63,5 @@ kapps:
       - Discussion Id
     form:
       - Discussion Id
+  webapis:
+      - 

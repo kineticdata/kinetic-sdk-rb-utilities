@@ -1,0 +1,229 @@
+<tree schema_version='1.0'>
+    <sourceName>Kinetic Request CE</sourceName>
+    <sourceGroup>Submissions > services > request-to-cancel</sourceGroup>
+    <type>Tree</type>
+    <status>Active</status>
+    <taskTree builder_version='' schema_version='1.0' version=''>
+        <name>Submitted</name>
+        <author/>
+        <notes/>
+        <lastID>46</lastID>
+        <request>
+            <task definition_id='system_start_v1' id='start' name='Start' x='63' y='65'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters/>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_solutions_service_portal_submission_config_v1_34</task>
+                </dependents>
+            </task>
+            <task definition_id='system_loop_head_v1' id='system_loop_head_v1_15' name='Loop Head' x='716' y='47'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='data_source' label='Data Source:' menu='' required='true' tooltip='The source that contains the data to use to create each task in the loop.'>&lt;children&gt;&lt;%=JSON.parse(@results['Retrieve Related Submission']['Children JSON']).collect {|child| "&lt;child&gt;#{child['id']}&lt;/child&gt;"}.join%&gt;&lt;/children&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='loop_path' label='Loop Path:' menu='' required='true' tooltip='The XPath statement to indicate what data records to process.'>//children/child</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='var_name' label='Variable Name:' menu='' required='false' tooltip='The local variable name used to represent the data used in loop tasks.'>childId</parameter>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>system_loop_tail_v1_16</task>
+                    <task label='' type='Complete' value=''>routine_kinetic_submission_retrieve_v1_36</task>
+                </dependents>
+            </task>
+            <task definition_id='system_loop_tail_v1' id='system_loop_tail_v1_16' name='Loop Tail' x='660' y='582'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='type' label='Type:' menu='All,Some,Any' required='true' tooltip='How many loop processes must be completed before continuing?'>All</parameter>
+                    <parameter dependsOnId='type' dependsOnValue='Some' id='number' label='Number:' menu='' required='false' tooltip='If some, how many?'/>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>system_junction_v1_43</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_solutions_service_portal_submission_config_v1' id='routine_kinetic_solutions_service_portal_submission_config_v1_34' name='Get Config' x='184' y='65'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Source Data' label='Source Data' menu='' required='false' tooltip='Submission Source Data Used to Build Configuration'>&lt;%=@source['Data']%&gt;</parameter>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_submission_retrieve_v1_35</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_retrieve_v1' id='routine_kinetic_submission_retrieve_v1_35' name='Retrieve Related Submission' x='426.64705882352956' y='58.29411764705885'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Id' label='Id' menu='' required='true' tooltip='The Id of the submission to retrieve'>&lt;%= @values['Related Submission Id']%&gt;</parameter>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>system_loop_head_v1_15</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_retrieve_v1' id='routine_kinetic_submission_retrieve_v1_36' name='Retrieve Child Submission' x='935' y='22'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Id' label='Id' menu='' required='true' tooltip='The Id of the submission to retrieve'>&lt;%= @childId %&gt;</parameter>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='Is Open' type='Complete' value='@results[&apos;Retrieve Child Submission&apos;][&apos;Core State&apos;] == &quot;Draft&quot;'>routine_kinetic_submission_create_v1_38</task>
+                    <task label='Not Open' type='Complete' value='@results[&apos;Retrieve Child Submission&apos;][&apos;Core State&apos;] != &quot;Draft&quot;'>system_junction_v1_45</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_create_v1' id='routine_kinetic_submission_create_v1_38' name='Create Cancel Task' x='1047.9411764705885' y='187.41176470588232'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Kapp Slug' label='Kapp Slug' menu='' required='true' tooltip='The slug of the Kapp to create the submission in'>&lt;%=@results['Get Config']['Queue Kapp Slug']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Form Slug' label='Form Slug' menu='' required='true' tooltip='The slug of the Form to create the submission in'>&lt;%=@results['Get Config']['Task Form Slug']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Current Page Name' label='Current Page Name' menu='' required='false' tooltip='The page to set the submission to'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Current Page Navigation' label='Current Page Navigation' menu='' required='false' tooltip='The direction of the next page (next or previous)'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Values JSON' label='Values JSON' menu='' required='false' tooltip='A JSON Map of values to set into the submissions fields'>&lt;%=
+child_values = JSON.parse(@results['Retrieve Child Submission']['Values JSON'])
+{
+  'Status' =&gt; 'Complete',
+  'Assigned Team' =&gt; child_values['Assigned Team'].to_s,
+  'Assigned Team Display Name' =&gt; child_values['Assigned Team Display Name'].to_s,
+  'Assigned Individual' =&gt; child_values['Assigned Individual'].to_s,
+  'Assigned Individual Display Name' =&gt; child_values['Assigned Individual Display Name'].to_s,
+  'Summary' =&gt; "Cancellation requested by - #{@submission['Created By']}",
+  'Details' =&gt; (@values['Cancellation Reason']).to_s,
+  'Resolution' =&gt; (@values['Cancellation Reason']).to_s
+}.to_json%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Origin Id' label='Origin Id' menu='' required='false' tooltip='Sets the submissions origin to another Kinetic Submission'>&lt;%= @values['Related Submission Id']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Parent Id' label='Parent Id' menu='' required='false' tooltip='Sets the submissions parent to another Kinetic Submission'>&lt;%= @childId %&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Submit Submission' label='Submit Submission' menu='' required='false' tooltip='True or False, if Submission should be Submitted when created'/>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_submission_update_v1_39</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_update_v1' id='routine_kinetic_submission_update_v1_39' name='Close Cancel Task' x='1040.5294117647056' y='427.5294117647059'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Id' label='Id' menu='' required='true' tooltip='The id of the submission to update'>&lt;%=@results['Create Cancel Task']['Id']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Core State' label='Updated - Core State' menu='' required='false' tooltip='The submissions core state'>Closed</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Current Page Name' label='Updated - Current Page Name' menu='' required='false' tooltip='The page to set the submission to'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Current Page Navigation' label='Updated - Current Page Navigation' menu='' required='false' tooltip='The direction of the next page (next or previous)'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Origin Id' label='Updated - Origin Id' menu='' required='false' tooltip='The Id of the submissions origin'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Parent Id' label='Updated - Parent Id' menu='' required='false' tooltip='The Id of the submissions parent'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Values JSON' label='Updated - Values JSON' menu='' required='false' tooltip='A JSON representation of the submissions values'/>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>system_junction_v1_45</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_update_v1' id='routine_kinetic_submission_update_v1_40' name='Close Submission' x='350' y='442'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Id' label='Id' menu='' required='true' tooltip='The id of the submission to update'>&lt;%= @submission['Id']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Core State' label='Updated - Core State' menu='' required='false' tooltip='The submissions core state'>Closed</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Current Page Name' label='Updated - Current Page Name' menu='' required='false' tooltip='The page to set the submission to'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Current Page Navigation' label='Updated - Current Page Navigation' menu='' required='false' tooltip='The direction of the next page (next or previous)'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Origin Id' label='Updated - Origin Id' menu='' required='false' tooltip='The Id of the submissions origin'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Parent Id' label='Updated - Parent Id' menu='' required='false' tooltip='The Id of the submissions parent'/>
+                    <parameter dependsOnId='' dependsOnValue='' id='Updated - Values JSON' label='Updated - Values JSON' menu='' required='false' tooltip='A JSON representation of the submissions values'/>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_finish_v1_44</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_submission_activity_create_v1' id='routine_kinetic_submission_activity_create_v1_41' name='Create Activity Record - Cancel' x='354' y='310'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>true</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Submission Id' label='Submission Id' menu='' required='true' tooltip='Id of the submission to create the activity record for'>&lt;%= @values['Related Submission Id']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Data' label='Data' menu='' required='false' tooltip='Data to store in the submission activity'>&lt;%={
+"Reason Provided" =&gt; @values['Cancellation Reason']
+}.to_json%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Description' label='Description' menu='' required='false' tooltip='Description of the submission activity'>Cancellation Requested by &lt;%= @submission['Submitted By']%&gt;</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Label' label='Label' menu='' required='false' tooltip='Label for the submission activity'>Cancellation Requested</parameter>
+                    <parameter dependsOnId='' dependsOnValue='' id='Type' label='Type' menu='' required='false' tooltip='Type of submission activity'/>
+                </parameters>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_submission_update_v1_40</task>
+                </dependents>
+            </task>
+            <task definition_id='system_junction_v1' id='system_junction_v1_43' name='Discussions - Continue' x='352' y='210'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters/>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>routine_kinetic_submission_activity_create_v1_41</task>
+                </dependents>
+            </task>
+            <task definition_id='routine_kinetic_finish_v1' id='routine_kinetic_finish_v1_44' name='Finish' x='354' y='539'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>true</deferrable>
+                <visible>false</visible>
+                <parameters>
+                    <parameter dependsOnId='' dependsOnValue='' id='Run Id' label='Run Id' menu='' required='false' tooltip='The Id of the completed run'>&lt;%=@run['Id']%&gt;</parameter>
+                </parameters>
+                <messages/>
+                <dependents/>
+            </task>
+            <task definition_id='system_junction_v1' id='system_junction_v1_45' name='Child Work Finished - Continue' x='826' y='569'>
+                <version>1</version>
+                <configured>true</configured>
+                <defers>false</defers>
+                <deferrable>false</deferrable>
+                <visible>false</visible>
+                <parameters/>
+                <messages/>
+                <dependents>
+                    <task label='' type='Complete' value=''>system_loop_tail_v1_16</task>
+                </dependents>
+            </task>
+        </request>
+    </taskTree>
+</tree>
