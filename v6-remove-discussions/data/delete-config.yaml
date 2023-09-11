@@ -45,12 +45,11 @@ space:
     - Discussion Invitation Updated
     - Discussion Notification Created
     - Team Created
+    - Team Membership Change
+    - Employee Membership Change
   attributes:
     - Discussion Id
     - Discussion Server Url
-  webhooks:
-    - Team Membership Change
-    - Employee Membership Change
 teams:
   attributes:
     - Discussion Id
