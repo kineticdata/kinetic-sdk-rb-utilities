@@ -45,6 +45,8 @@ space:
     - Discussion Invitation Updated
     - Discussion Notification Created
     - Team Created
+    - Team Membership Change
+    - Employee Membership Change
   attributes:
     - Discussion Id
     - Discussion Server Url
@@ -60,3 +62,5 @@ kapps:
       - Discussion Id
     form:
       - Discussion Id
+  webapis:
+      - 
