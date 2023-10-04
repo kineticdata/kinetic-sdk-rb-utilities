@@ -79,7 +79,7 @@ def log_output(args)
   end
 end
 
-@logger.info "\n\n\n### Beginning Migration for #{SPACE_SLUG}###"
+@logger.info "\n\n\n### Beginning Migration for #{SPACE_URL}###"
 
 # create folder to write submission data to
 FileUtils.mkdir_p("#{PWD}/data/previous/", :mode => 0700)
