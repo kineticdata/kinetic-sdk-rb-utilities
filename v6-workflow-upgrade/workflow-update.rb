@@ -62,6 +62,9 @@ http = KineticSdk::CustomHttp.new({
   username: SPACE_USERNAME,
   password: SPACE_PASSWORD,
 })
+@logger.info "\r########################\rBegin Script.\r########################"
+@logger.info "\r######################## Exporting Trees. ########################"
+
 
 sources_to_process = []
 
@@ -71,7 +74,9 @@ conn_task.find_sources().content['sourceRoots'].each do |source|
   # Only update trees in the "Kinetic Request CE" sources
   if source['type'] == "Kinetic Request CE"
     sources_to_process.push(source['name'])
+    @logger.info "\t Exporting trees in the \"#{source['name']}\" source"
     conn_task.find_trees({ "source" => source['name'] }).content['trees'].each do |tree|
+      @logger.info "\t - Exporting the #{tree['title']} tree."
       conn_task.export_tree(tree['title'])
     end
   end
@@ -80,11 +85,12 @@ end
 #
 # BEGIN: Convert Trees to workflow and delete Legacy Trees
 #
+@logger.info "\r######################## Begin Updating Trees ########################"
 
 # Interate through each "Kinetic Request CE" source.
 sources_to_process.each { |source_name|
   
-  @logger.info "\r########################\rUpdating Trees in the \"#{source_name}\" source.\r########################"
+  @logger.info "Updating Trees in the \"#{source_name}\" source."
   # Find all Trees
   trees = conn_task.find_trees({"source"=>source_name}).content['trees']
 
@@ -95,19 +101,26 @@ sources_to_process.each { |source_name|
     
     # If "event" proprty is nil it will be a tree, otherwise it is a workflow and doens't need to be processed.
     if tree_def.content['event'].nil? 
-      xml = tree_def.content['export']
-      doc = Document.new(xml)
-      root = doc.root
-      source_name = "#{root.elements["sourceName"].text}"
-      source_group = "#{root.elements["sourceGroup"].text}"      
+      # Define the trees to be converted
+      tree_names_to_convert = ["Closed","Created", "Deleted","Saved","Submitted","Updated"]
+      tree_source_types_to_convert = ["Datastore Submissions", "Datastore Forms","Forms","Submissions","Teams","Users"]
       
-      # Only process "Submission" Trees.
-      if source_name.split(" > ")[0] == "Kinetic Request CE" && source_group.split(" > ")[0] != "WebApis"
+      xml = tree_def.content['export']
+      source_name = tree_def.content['sourceName']
+      source_group = tree_def.content['sourceGroup']      
+      name = tree_def.content['name']
+
+      # Process Tree skip
+      # - Trees not in the Kinetic Request CE Source
+      # - WebApis
+      # - Trees that are not "Closed","Created", "Deleted","Submmitted","Updated"
+      if source_name.split(" > ")[0] == "Kinetic Request CE" && tree_names_to_convert.include?(name) && tree_source_types_to_convert.include?(source_group.split(" > ")[0])
         @logger.info "Processing tree: \"#{tree_def.content['title']}\""
 
-        status = "#{root.elements["status"].text}"
+        status = tree_def.content['status']
         kapp_slug = source_group.split(" > ")[1]
         form_slug = source_group.split(" > ")[2]
+        name = tree_def.content['name']
 
         # Remove trailing "s" to singularize values such as "Submissions", "Forms", "Users"
         if source_group.split(" > ")[0].end_with?("s")
@@ -125,7 +138,7 @@ sources_to_process.each { |source_name|
         end
 
         # Set hash of values for the workflow import
-        tree_name = "#{event_preface} #{root.elements["taskTree/name"].text}"        
+        tree_name = "#{event_preface} #{name}"        
         hash = {
           "name": "#{tree_name}",
           "event": "#{tree_name}",
@@ -134,12 +147,13 @@ sources_to_process.each { |source_name|
 
         # Output values
         @logger.info "\t status: #{status}"
+        @logger.info "\t name: #{name}"
         @logger.info "\t source_name: #{source_name}"
         @logger.info "\t source_group: #{source_group}"
         @logger.info "\t tree_name: #{tree_name}"
         @logger.info "\t kapp_slug: #{kapp_slug}"
         @logger.info "\t form_slug: #{form_slug}"
-
+          
         # Appropriately import the workflow as a Form, Kapp, or Space Workflow
         if form_slug
           add_workflow_response = core_space.add_form_workflow(kapp_slug , form_slug, hash)
@@ -162,7 +176,7 @@ sources_to_process.each { |source_name|
         # There appears to be a bug that prevents the status of "Inactive" for imported Workflows.
         if add_workflow_response.status == 200 && status == "Inactive"
           # Set the url for the put method
-          # Must us the put method in the SDK as an update_workflows method doesn't exit
+          # Must use the put method in the SDK as an update_workflows method doesn't exist
           
           url = "#{SPACE_URL}/app/api/v1/"
           if form_slug
@@ -177,42 +191,15 @@ sources_to_process.each { |source_name|
         end
 
         # Delete the privious tree now that it has been imported as a Workflow
-        if add_workflow_response.status == 200
+        if add_workflow_response.status == 200 || add_workflow_response.status == 500
           delete_repsonse = conn_task.delete_tree(tree_def.content['title'])
           @logger.info "\t Tree was successfully deleted." if delete_repsonse.status == 200
         end
 
+      else
+        @logger.info "Skipped tree: \"#{tree_def.content['title']}\""
       end
     end
   }
-  @logger.info "Finished processing Trees"       
+  @logger.info "\r########################\rScript Completed.\r########################"
 }
-
-# Dir["#{task_path}/sources/kinetic-request-ce/trees/submissions*.xml"].each{ | file |
-
-#   doc = Document.new(File.new(file))
-#   root = doc.root
-#   source_group = "#{root.elements["sourceGroup"].text}"
-#   tree_name = "#{root.elements["taskTree/name"].text}"
-
-#   kapp_slug = source_group.split(" > ")[1]
-#   form_slug = source_group.split(" > ")[2]
-#   hash = {
-#     "name": "Submission #{tree_name}",
-#     "event": "Submission #{tree_name}",
-#     "treeXml": File.read(file)
-#   }
-
-#   if form_slug
-#     @logger.info "Form: #{form_slug}"
-#     core_space.add_form_workflow(kapp_slug , form_slug, hash)
-#   elsif kapp_slug
-#     @logger.info "Kapp: #{kapp_slug}"
-#     core_space.add_kapp_workflow(kapp_slug , hash)
-#   else
-#     @logger.info "Space"
-#     core_space.add_space_workflow(hash)
-#   end
-
-# }
-## TODO ## 

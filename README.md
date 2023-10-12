@@ -1,3 +1,7 @@
+# v6-workflow-update
+
+- Added scripts used to convert v5 trees into v6 workflows
+
 # kinetic-sdk-rb-utilities
 
 This repository is a collection of commonly needed scripts for interacting with the Kinetic Platform.
