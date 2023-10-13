@@ -83,7 +83,7 @@ conn_task.find_sources().content['sourceRoots'].each do |source|
 end
 
 #
-# BEGIN: Convert Trees to workflow and delete Legacy Trees
+# BEGIN: Convert Trees to v6 workflow
 #
 @logger.info "\r######################## Begin Updating Trees ########################"
 
@@ -94,7 +94,7 @@ sources_to_process.each { |source_name|
   # Find all Trees
   trees = conn_task.find_trees({"source"=>source_name}).content['trees']
 
-  # Iterate through the trees. Import relavent trees as a workflow and then delete it.
+  # Iterate through the trees. Import relavent trees as a workflow.
   trees.each{ |tree|
     # Get individual Tree
     tree_def = conn_task.find_tree(tree['title'], { "include" => "details,export" })
@@ -190,12 +190,18 @@ sources_to_process.each { |source_name|
           @logger.info "\t Successfully updated the workflow to Status of \"#{status}\"" if update_response.status == 200
         end
 
-        # Delete the privious tree now that it has been imported as a Workflow
-        if add_workflow_response.status == 200 || add_workflow_response.status == 500
-          delete_repsonse = conn_task.delete_tree(tree_def.content['title'])
-          @logger.info "\t Tree was successfully deleted." if delete_repsonse.status == 200
-        end
+        # # This is dangerous as it will break any inflight processes.
+        # # Delete the privious tree now that it has been imported as a Workflow
+        # if add_workflow_response.status == 200 || add_workflow_response.status == 500
+        #   delete_repsonse = conn_task.delete_tree(tree_def.content['title'])
+        #   @logger.info "\t Tree was successfully deleted." if delete_repsonse.status == 200
+        # end
 
+        # Inactivate the trees. In activiation allows for inflight requests to complete but will not be used, even if the Webhooks exists.
+        if add_workflow_response.status == 200 || add_workflow_response.status == 500
+          delete_repsonse = conn_task.update_tree(tree_def.content['title'],{"status": "Inactive"})
+          @logger.info "\t Tree was successfully updated." if delete_repsonse.status == 200
+        end
       else
         @logger.info "Skipped tree: \"#{tree_def.content['title']}\""
       end
