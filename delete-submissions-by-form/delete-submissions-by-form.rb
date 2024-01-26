@@ -115,7 +115,8 @@ if FILTER != ''
     end
 else
     begin
-        Submissions = core_space.find_form_submissions(KappSlug,FormSlug).content["submissions"]
+        params = {'limit': 1000}
+        Submissions = core_space.find_form_submissions(KappSlug,FormSlug, params).content["submissions"]
     rescue
         logger.error("There was an error attempting to query with no filter")
         logger.error("Kapp: #{KappSlug} - Form: #{FormSlug}")
@@ -133,6 +134,11 @@ end
 # Submissions.each do |s|
 #     puts s["id"]
 # end
+
+#TODO - Can I add logic to handle submissions with children? 
+#include=children
+#Loop array to remove
+#Check for inf recursion down
 #Loop through each submission
 Submissions.each do |s|
     begin

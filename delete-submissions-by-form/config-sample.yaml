@@ -1,9 +1,9 @@
 # Config
 SPACE_URL: https://playground-travis-wiese.kinopsdev.io
-SPACE_SLUG: playground-travis-wiese
-SPACE_USERNAME: Travis.Wiese@kineticdata.com
-SPACE_PASSWORD: Wolfang246
-KAPP_SLUG: onboarding-project
+SPACE_SLUG: SLUGHERE
+SPACE_USERNAME: USERNAMEHERE
+SPACE_PASSWORD: PWDHERE
+KAPP_SLUG: KAPPSLUGHERE
 FORM_SLUG: initial-checklist
 LOG_LEVEL: info
 FILTER: "values[Environment] = \"Production\""
