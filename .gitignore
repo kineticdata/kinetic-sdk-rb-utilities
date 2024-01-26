@@ -1,2 +1,5 @@
 *config/*.yml
 !config-sample.yml
+output.log
+*config*.yaml
+!config-sample.yaml
