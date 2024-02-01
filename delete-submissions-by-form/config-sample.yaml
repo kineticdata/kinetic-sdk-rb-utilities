@@ -1,9 +1,9 @@
 # Config
-SPACE_URL: https://playground-travis-wiese.kinopsdev.io
+SPACE_URL: https://SPACE.kinops.io
 SPACE_SLUG: SLUGHERE
 SPACE_USERNAME: USERNAMEHERE
 SPACE_PASSWORD: PWDHERE
 KAPP_SLUG: KAPPSLUGHERE
-FORM_SLUG: initial-checklist
+FORM_SLUG: FORMSLUGHERE
 LOG_LEVEL: info
 FILTER: "values[Environment] = \"Production\""
