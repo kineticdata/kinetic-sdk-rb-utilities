@@ -50,7 +50,6 @@ conn = KineticSdk::Core.new({
   }
 })
 
-logger.info export = config["EXPORT"].class
 parameters = {
   "q" => (config["QUERY"] if config["QUERY"]),
   "direction" => "DESC",
@@ -60,12 +59,17 @@ parameters = {
 parameters["export"] = true 
 parameters["elementsToDelete"] = config["ELEMENTS_TO_DELETE"] if config["ELEMENTS_TO_DELETE"]
 
+
+@logger.info "Starting Element Deletion"
+@logger.info "Deleting: #{parameters["elementsToDelete"]}"
+
 def recursive_element_delete(obj, target)
-  puts (obj)
   case obj
   when Array
     obj.delete_if {|e| 
-      target.include?(e["name"])
+      exists = target.include?(e["name"])
+      @logger.info "\t Deleting: #{e["name"]}" if exists
+      exists
     }
     obj.each do |e|
       case e
@@ -94,14 +98,16 @@ end
 
 # Process the updates
 response.content['forms'].each{ |form|
+  @logger.info("Checking: #{form['slug']}")
+
   # Get the full form in "Export" format
   properties = conn.find_form(config["KAPP_SLUG"], form['slug'], parameters).content['form']
-  
   # Delete elements from the form object
   properties = recursive_element_delete(properties, parameters["elementsToDelete"])
- 
   # Update the form with the new properties
-  conn.update_form(config['KAPP_SLUG'], properties['slug'], properties)
+  @logger.info "\t Updating the form: #{properties['name']}"
+  response = conn.update_form(config['KAPP_SLUG'], properties['slug'], properties)
+  @logger.info "\t Http Response Code: #{response.code}"
 }
 
 puts "Finished"
