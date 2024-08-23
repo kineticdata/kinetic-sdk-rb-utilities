@@ -1,3 +1,7 @@
+# delete-form-elements
+
+-  Added script to delete multiple elements from one or more forms at once.
+
 # v6-workflow-update
 
 - Added scripts used to convert v5 trees into v6 workflows
