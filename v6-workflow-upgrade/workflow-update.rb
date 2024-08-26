@@ -66,41 +66,43 @@ http = KineticSdk::CustomHttp.new({
 @logger.info "\r######################## Exporting Trees. ########################"
 
 
-sources_to_process = []
-
-# Export Scources and Trees as a backup
-conn_task.export_sources()
-conn_task.find_sources().content['sourceRoots'].each do |source|
-  # Only update trees in the "Kinetic Request CE" sources
-  if source['type'] == "Kinetic Request CE"
-    sources_to_process.push(source['name'])
-    @logger.info "\t Exporting trees in the \"#{source['name']}\" source"
-    conn_task.find_trees({ "source" => source['name'] }).content['trees'].each do |tree|
-      @logger.info "\t - Exporting the #{tree['title']} tree."
-      conn_task.export_tree(tree['title'])
-    end
-  end
-end
+sources_to_process = ["Kinetic Request CE"] # Only the "Kinetic Request CE" source
 
 #
 # BEGIN: Convert Trees to v6 workflow
 #
 @logger.info "\r######################## Begin Updating Trees ########################"
 
-# Interate through each "Kinetic Request CE" source.
+# Interate through each source.
 sources_to_process.each { |source_name|
   
   @logger.info "Updating Trees in the \"#{source_name}\" source."
   # Find all Trees
-  trees = conn_task.find_trees({"source"=>source_name}).content['trees']
+  response = conn_task.find_trees({"source"=>source_name, "limit" => 1000}).content
+  trees = response['trees']
+  
+  # Error if there are more than 1000 trees
+  count = response['count'].to_i
+  if count >= 1000
+    puts "ERROR: #{count} trees were found. Only the first 1000 trees can be processed."
+    puts "Code must be updated to handle additional trees."
+    puts "EXITING"
+    exit
+  end  
 
-  # Iterate through the trees. Import relavent trees as a workflow.
+  # Iterate through the treeas. Import relavent trees as a workflow.
   trees.each{ |tree|
-    # Get individual Tree
+
+  # Get individual Tree
     tree_def = conn_task.find_tree(tree['title'], { "include" => "details,export" })
     
     # If "event" proprty is nil it will be a tree, otherwise it is a workflow and doens't need to be processed.
     if tree_def.content['event'].nil? 
+      
+      # Export the tree as backup
+      @logger.info "\t - Exporting the #{tree['title']} tree."
+      conn_task.export_tree(tree['title'])
+      
       # Define the trees to be converted
       tree_names_to_convert = ["Closed","Created", "Deleted","Saved","Submitted","Updated"]
       tree_source_types_to_convert = ["Datastore Submissions", "Datastore Forms","Forms","Submissions","Teams","Users"]
