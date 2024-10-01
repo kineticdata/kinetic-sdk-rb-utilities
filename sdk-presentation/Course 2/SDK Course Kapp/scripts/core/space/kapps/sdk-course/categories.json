@@ -1,0 +1,44 @@
+[
+  {
+    "attributes": [
+
+    ],
+    "name": "Facilities",
+    "slug": "facilities"
+  },
+  {
+    "attributes": [
+
+    ],
+    "name": "Finance",
+    "slug": "finance"
+  },
+  {
+    "attributes": [
+
+    ],
+    "name": "Human Resources",
+    "slug": "human-resources"
+  },
+  {
+    "attributes": [
+
+    ],
+    "name": "Information Technology",
+    "slug": "information-technology"
+  },
+  {
+    "attributes": [
+
+    ],
+    "name": "Legal",
+    "slug": "legal"
+  },
+  {
+    "attributes": [
+
+    ],
+    "name": "Marketing",
+    "slug": "marketing"
+  }
+]
