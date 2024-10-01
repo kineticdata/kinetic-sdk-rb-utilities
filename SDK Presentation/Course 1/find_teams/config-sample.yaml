@@ -1,0 +1,5 @@
+# server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+SERVER_URL: 
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+SPACE_SLUG: 

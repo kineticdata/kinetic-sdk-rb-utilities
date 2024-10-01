@@ -1,0 +1,8 @@
+# SERVER_URL: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+SERVER_URL: 
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+SPACE_SLUG: 
+#LOG_LEVEL: {OFF, INFO, or DEBUG}ruby
+LOG_LEVEL: INFO 
+
