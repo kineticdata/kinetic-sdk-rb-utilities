@@ -35,6 +35,7 @@ Import forms:
 
 ## Optiional
 - Git (used for downloading this repository to your local machine.)
+    - https://github.com/git-guides/install-git
 
 ## Setup
 - Download this repository to your local machine. 
