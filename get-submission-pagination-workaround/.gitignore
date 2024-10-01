@@ -1,5 +1,6 @@
 Gemfile.lock
 output.log
+output.csv
 
 # Exclude vendor directory
 vendor

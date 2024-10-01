@@ -1,6 +1,0 @@
-# server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
-SERVER_URL: https://playground-brian-peterson.kinopsdev.io
-SPACE_USERNAME: brian.peterson@kineticdata.com
-SPACE_PASSWORD: kinetic
-SPACE_SLUG: playground-brian-peterson
-

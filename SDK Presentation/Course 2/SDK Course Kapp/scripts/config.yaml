@@ -1,8 +1,0 @@
-# SERVER_URL: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
-SERVER_URL: https://playground-brian-peterson.kinopsdev.io
-SPACE_USERNAME: brian.peterson@kineticdata.com
-SPACE_PASSWORD: 9NKb2oo.P@!s
-SPACE_SLUG: playground-brian-peterson
-#LOG_LEVEL: {OFF, INFO, or DEBUG}ruby
-LOG_LEVEL: INFO
-INCLUDE: details
