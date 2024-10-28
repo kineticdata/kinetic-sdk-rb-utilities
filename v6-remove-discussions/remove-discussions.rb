@@ -16,7 +16,59 @@ logger = Logger.new("#{PWD}/output.log")
 logger.level = Logger::INFO
 
 # Get the config files
-config_file = "#{PWD}/config.yaml"
+# # Get the config files
+# puts "Config name? (ex: config_file.yaml)"
+# config_file_name = gets.chomp
+# puts "Config: #{config_file_name}"
+
+config_folder_path = File.join(PWD,'config')
+
+if !File.directory?(config_folder_path)
+  logger.info "Config folder not found at #{config_folder_path}"
+  puts "Cannot find config folder!"
+  puts "Exiting..."
+  gets
+  exit
+end
+
+# #Determine Config file to use
+config_exts = ['.yaml','.yml']
+configArray = []
+logger.info "Checking #{config_folder_path} for config files"
+begin
+  Find.find("#{config_folder_path}/") do |file|
+    logger.info "Checking #{file}"
+    configArray.append(File.basename(file)) if config_exts.include?(File.extname(file))
+  end
+rescue
+  logger.info "Error finding default config file path!"
+  puts "Cannot find config files in default path! (#{pwd})"
+  puts "Exiting script..."
+  $stdin.gets
+  exit
+end
+logger.info "Found config files"
+
+puts "Select your config file"
+configArray.each_with_index do |cFile, index|
+  puts "#{index+1}) #{cFile}" 
+end
+logger.info "Sel section"
+print "Selection: "
+sel = $stdin.gets.chomp.to_i
+begin
+  configFile = configArray[sel-1]
+  logger.info "Option #{sel} - #{configFile}"
+rescue
+  logger.info "Error selecting config file!"
+  puts "Error selecting config file!"
+  puts "Exiting..."
+  gets
+  exit
+end
+
+
+config_file = "#{config_folder_path}/#{configFile}"
 delete_file = "#{PWD}/data/delete-config.yaml"
 modify_file = "#{PWD}/data/modify-config.yaml"
 env = nil
@@ -32,9 +84,20 @@ end
 # load config from config file
 SPACE_URL = env["SPACE_URL"]
 SPACE_SLUG = env["SPACE_SLUG"]
-SPACE_USERNAME = env["SPACE_USERNAME"]
-SPACE_PASSWORD = env["SPACE_PASSWORD"]
 LOG_LEVEL = env["LOG_LEVEL"]
+
+#Function allows re-usability and added features
+def ValidateField(field, defaultval)
+  if !field.is_a?(String) || field === defaultval
+    puts "Please enter #{defaultval}"
+    field = gets.chomp
+  end
+  return field
+end
+# If username blank, prompt for password. This will NOT store in file
+SPACE_USERNAME = ValidateField(env["SPACE_USERNAME"], 'USER')
+# If password blank, prompt for password. This will NOT store in file
+SPACE_PASSWORD = ValidateField(env["SPACE_PASSWORD"], 'PASSWORD')
 
 # create space connection
 core_space = KineticSdk::Core.new({

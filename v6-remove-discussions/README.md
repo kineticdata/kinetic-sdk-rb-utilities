@@ -4,7 +4,7 @@ This script is used to check if spaces can be safely upgraded to v6 and if so, r
 ## Instructions
 1. Create a copy of the config-sample.yaml file and naming it config.yaml. Next, update the values inside this file to point to the right Kinetic Platform Environment
 
-2. Run the preflight-check.rb file against the space you're trying to migrate. It will DOES NOT modify any data `ruby preflight-check`
+2. Run the preflight-check.rb file against the space you're trying to migrate. It DOES NOT modify any data `ruby preflight-check.rb`
 
 3. Check the output.log to see if there are any warnings about migrating.
     - If a tree/routine has the message "does not match original" it *may* mean that the workflow was modified/customized. If the remove-discussions.rb script is run it will overwrite the customizations.
