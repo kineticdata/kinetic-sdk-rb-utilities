@@ -1,0 +1,21 @@
+# server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+SERVER_URL: 
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+SPACE_SLUG: 
+KAPP_SLUG: services
+#FORM_SLUG: Empty value for Kapp Query or provide a Form Slug for a Form Query
+FORM_SLUG: 
+# QUERY: createdBy= "integration_user"
+# QUERY: type IN ("Custodial Services", "Electrical", "Furniture", "Lighting", "Materials Management", "Mechanical", "Online Services", "	Plumbing", "Security", "Shipping and Distribution", "Software", "Structure", "System Account", "Volunteer")
+# QUERY: type IN ("Service")
+# QUERY: slug  = "arc-flash"
+ELEMENTS_TO_UPDATE: 
+  - Type of Alarm
+  - Work Location
+#JSON of data to update. 
+UPDATE: {"required": true}
+#LIMIT: Number of records to return (there is no pagination)
+LIMIT: "100" 
+#LOG_LEVEL: {OFF, INFO, or DEBUG}ruby
+LOG_LEVEL: INFO 
