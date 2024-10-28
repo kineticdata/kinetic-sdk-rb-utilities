@@ -89,7 +89,7 @@ end
 
 # Get Submissions
 if !config["FORM_SLUG"].nil?
-	response =  conn.find_form(config["KAPP_SLUG"], config["FORM_SLUG"]) # Find the Form
+	response =  conn.find_form(config["KAPP_SLUG"], config["FORM_SLUG"], parameters) # Find the Form
   response.content['forms'] = [response.content['form']] # Convert to array to be consistent with results contianing multiple forms
   response.content.delete('form') # Delete the form object, it is no longer needed
 else
