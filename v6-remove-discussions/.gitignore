@@ -3,6 +3,7 @@ output.log
 
 # Exclude vendor directory
 vendor
+GrabNGoRemover
 
 # Exclude config files to prevent accidentally committing them
 config.yaml
