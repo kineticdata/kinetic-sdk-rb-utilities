@@ -64,36 +64,43 @@ stringToRemove1 = "defaultDataSource"
 stringToRemove2 = "choicesDataSource"
 $arrayOfStringToRemove = [stringToRemove1, stringToRemove2]
 
-puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files/)'
-fileOption = $stdin.gets.chomp
-if fileOption[-1] == '/'
+puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
+startingUrl = $stdin.gets.chomp
+if startingUrl[-1] == '/'
   #Remove trailing slash 
-  fileOption = fileOption.chop
+  startingUrl = startingUrl.chop
 end
+
+puts "Type destination folder(ex: C:/results)"
+destinationPath = $stdin.gets.chomp
+
+
 #Global array
 $FileList = []
 
 #Build file list
-retrieveFormFiles(fileOption)
+retrieveFormFiles(startingUrl)
 
 #Read file
-preconvertedFile = File.read('C:\temp\pre-convert-test.json')
-preconvertedHash = JSON.parse(preconvertedFile)
+$FileList.each do |file|
+  #Confirm directory of destination already exists - create if missing
+  directoryPath = (file.split('/')[0..file.split('/').count-2].join('/')).sub(startingUrl,destinationPath)
+  Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
 
-#Remove empty integrations section
-begin
-  preconvertedHash['form'].delete('integrations')
-rescue
-
+  preconvertedFile = File.read(file)
+  preconvertedHash = JSON.parse(preconvertedFile)
+  #Remove empty integrations section
+  begin
+    preconvertedHash['form'].delete('integrations')
+  rescue
+  end
+  #Iterate through all pages in form
+  preconvertedHash['form']['pages'].each do |page|
+    recurseIntoElements(page)
+  end
+  #Export to file
+  File.open((file.sub(startingUrl,destinationPath)),'w') do |f|
+    f.write(preconvertedHash.to_json)
+  end
 end
 
-#Iterate through all pages in form
-preconvertedHash['form']['pages'].each do |page|
-  recurseIntoElements(page)
-end
-
-#Export to file
-
-File.open('C:\temp\post-convert-test.json','w') do |f|
-  f.write(preconvertedHash.to_json)
-end
