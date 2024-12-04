@@ -1,9 +1,7 @@
 .vscode
-
 *config/*.yml
-*config/*.yaml
-*config*.yaml
+*/config/*.yaml
+*/*config*.yaml
+*/*config*.yml
 !config-sample.yml
-output.log
-
-!config-sample.yaml
+*.log
