@@ -1,0 +1,14 @@
+SPACE_URL: https://<YOUR_SPACE>.kinops.io
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+LIMIT: "100" #Limit of records to return (there is no pagination)
+LOG_LEVEL: INFO # {OFF, INFO, or DEBUG}
+
+# WORKFLOW INFO - Used to find the workflow to be updated
+SOURCE: 
+SOURCE_GROUP: 
+NAME: 
+
+# FIND AND REPLACEMENT VALUES
+FIND_VALUE: "<%=  @values['Requested By'] %>"   
+REPLACEMENT_VALUE: "<%= @results['Get Details and Run Standard Process']['Requester Remedy Login ID'] %>"
