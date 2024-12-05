@@ -28,12 +28,15 @@ end
 
 def retrieveFormFiles (baseurl)
   #If file, handle values and return (Single file option)
-  if File.directory?(baseurl)
+  if !File.directory?(baseurl)
+    puts "BaseURL is file"
     if baseurl.end_with?('.json')
+      puts "Baseurl is JSON File"
       $FileList.append(baseurl)
       return
     end
   end
+  $FolderList.append(baseurl);
   #Iterate each file in folder
   Dir.entries(baseurl).each do |file|
     #Skip directory stuff
@@ -41,7 +44,7 @@ def retrieveFormFiles (baseurl)
       next
     end
     puts "File #{file}"
-    newurl = (baseurl + '/' + file)
+    newurl = File.join(baseurl,file)
     if File.directory?(newurl)
       puts "Traversing into directory #{baseurl}/#{file}"
       #Recurse into folder
@@ -56,6 +59,14 @@ def retrieveFormFiles (baseurl)
   end
 end
 
+def createDestinationDirectory (startingUrl,newUrl)
+  $FolderList.each do |folder| 
+    destfolder = folder.sub(startingUrl,newUrl);
+    puts "dest: #{destfolder}"
+    Dir.mkdir(destfolder) unless Dir.exist?(destfolder);
+  end unless $FolderList.empty?
+end
+
 #####################################################################################
 ######                            Main Code                                    ######
 #####################################################################################
@@ -66,7 +77,7 @@ $arrayOfStringToRemove = [stringToRemove1, stringToRemove2]
 
 puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
 startingUrl = $stdin.gets.chomp
-if startingUrl[-1] == '/'
+if startingUrl[-1] == File::SEPARATOR
   #Remove trailing slash 
   startingUrl = startingUrl.chop
 end
@@ -77,15 +88,22 @@ destinationPath = $stdin.gets.chomp
 
 #Global array
 $FileList = []
+$FolderList = []
 
 #Build file list
+puts "Building file list"
 retrieveFormFiles(startingUrl)
-
+puts "Converting files"
+createDestinationDirectory(startingUrl,destinationPath)
 #Read file
+puts "Files #{$FileList}"
+Dir.mkdir(destinationPath) unless Dir.exist?(destinationPath)
 $FileList.each do |file|
   #Confirm directory of destination already exists - create if missing
-  directoryPath = (file.split('/')[0..file.split('/').count-2].join('/')).sub(startingUrl,destinationPath)
-  Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
+  directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
+  fullFilePath = File.join(directoryPath,File.basename(file))
+  puts "New file: #{fullFilePath}"
+  #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
 
   preconvertedFile = File.read(file)
   preconvertedHash = JSON.parse(preconvertedFile)
@@ -99,7 +117,7 @@ $FileList.each do |file|
     recurseIntoElements(page)
   end
   #Export to file
-  File.open((file.sub(startingUrl,destinationPath)),'w') do |f|
+  File.open(fullFilePath,'w') do |f|
     f.write(preconvertedHash.to_json)
   end
 end
