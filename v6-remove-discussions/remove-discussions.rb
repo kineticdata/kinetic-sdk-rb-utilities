@@ -6,6 +6,7 @@ require "logger"
 require "csv"
 require "rexml/document"
 include REXML
+require 'find'
 
 # determine the present working directory
 PWD = File.expand_path(File.dirname(__FILE__))

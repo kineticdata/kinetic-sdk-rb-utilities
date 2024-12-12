@@ -97,6 +97,8 @@ puts "Converting files"
 createDestinationDirectory(startingUrl,destinationPath)
 #Read file
 puts "Files #{$FileList}"
+
+#Create base directory if it doesn't exist
 Dir.mkdir(destinationPath) unless Dir.exist?(destinationPath)
 $FileList.each do |file|
   #Confirm directory of destination already exists - create if missing
@@ -106,19 +108,24 @@ $FileList.each do |file|
   #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
 
   preconvertedFile = File.read(file)
-  preconvertedHash = JSON.parse(preconvertedFile)
-  #Remove empty integrations section
-  begin
-    preconvertedHash['form'].delete('integrations')
-  rescue
+  convertedHash = JSON.parse(preconvertedFile)
+
+  #If form, convert
+  if convertedHash.has_key?('form')
+    #Remove empty integrations section
+    begin
+      convertedHash['form'].delete('integrations')
+    rescue
+    end
+    #Iterate through all pages in form
+    convertedHash['form']['pages'].each do |page|
+      recurseIntoElements(page)
+    end
   end
-  #Iterate through all pages in form
-  preconvertedHash['form']['pages'].each do |page|
-    recurseIntoElements(page)
-  end
+  
   #Export to file
   File.open(fullFilePath,'w') do |f|
-    f.write(preconvertedHash.to_json)
+    f.write(convertedHash.to_json)
   end
 end
 
