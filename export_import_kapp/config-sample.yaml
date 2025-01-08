@@ -5,4 +5,5 @@ SPACE_PASSWORD:
 SPACE_SLUG: 
 #LOG_LEVEL: {OFF, INFO, or DEBUG}ruby
 LOG_LEVEL: INFO 
-
+#KAPP: kapp_slug
+KAPP: services
