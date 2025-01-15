@@ -4,7 +4,10 @@ require "json"
 ######                            Functions                                    ######
 #####################################################################################
 
-#Check if element is a section (Will contain sub-element sections) and recurse through
+
+########################################################################################
+#Check if element is a section (Will contain sub-element sections) and recurse through #
+########################################################################################
 def recurseIntoElements (currentElement)
   currentElement['elements'].each do |element|
     if element['type'] == 'section'
@@ -24,8 +27,9 @@ def recurseIntoElements (currentElement)
   end
 end
 
-#Iterate files and append to global list
-
+###################################################################
+#            Iterate files and append to global list              #
+###################################################################
 def retrieveFormFiles (baseurl)
   #If file, handle values and return (Single file option)
   if !File.directory?(baseurl)
@@ -59,6 +63,10 @@ def retrieveFormFiles (baseurl)
   end
 end
 
+###########################################################
+# Create destination directories before re-creating files #
+###########################################################
+
 def createDestinationDirectory (startingUrl,newUrl)
   $FolderList.each do |folder| 
     destfolder = folder.sub(startingUrl,newUrl);
@@ -76,14 +84,14 @@ stringToRemove2 = "choicesDataSource"
 $arrayOfStringToRemove = [stringToRemove1, stringToRemove2]
 
 puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
-startingUrl = $stdin.gets.chomp
+startingUrl = File.path($stdin.gets.chomp)
 if startingUrl[-1] == File::SEPARATOR
   #Remove trailing slash 
   startingUrl = startingUrl.chop
 end
 
 puts "Type destination folder(ex: C:/results)"
-destinationPath = $stdin.gets.chomp
+destinationPath = File.path($stdin.gets.chomp)
 
 
 #Global array
@@ -99,6 +107,7 @@ createDestinationDirectory(startingUrl,destinationPath)
 puts "Files #{$FileList}"
 
 #Create base directory if it doesn't exist
+#This may be handled in createDestinationDirectory - need to confirm and remove
 Dir.mkdir(destinationPath) unless Dir.exist?(destinationPath)
 $FileList.each do |file|
   #Confirm directory of destination already exists - create if missing
