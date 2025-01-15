@@ -110,27 +110,46 @@ puts "Files #{$FileList}"
 #This may be handled in createDestinationDirectory - need to confirm and remove
 Dir.mkdir(destinationPath) unless Dir.exist?(destinationPath)
 $FileList.each do |file|
+  puts file
   #Confirm directory of destination already exists - create if missing
   directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
   fullFilePath = File.join(directoryPath,File.basename(file))
   puts "New file: #{fullFilePath}"
   #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
-
   preconvertedFile = File.read(file)
-  convertedHash = JSON.parse(preconvertedFile)
 
-  #If form, convert
-  if convertedHash.has_key?('form')
-    #Remove empty integrations section
-    begin
-      convertedHash['form'].delete('integrations')
-    rescue
-    end
-    #Iterate through all pages in form
-    convertedHash['form']['pages'].each do |page|
-      recurseIntoElements(page)
+  #Iterate each item in configuration array - if array
+  if JSON.parse(preconvertedFile).class == Array
+    JSON.parse(preconvertedFile).each {|file_item|
+
+      #If form, convert
+      if file_item.has_key?('form')
+        #Remove empty integrations section
+        begin
+          file_item['form'].delete('integrations')
+        rescue
+        end
+        #Iterate through all pages in form
+        file_item['form']['pages'].each do |page|
+          recurseIntoElements(page)
+        end
+      end
+    }
+  else #If single item
+    convertedHash = JSON.parse(preconvertedFile)
+    if convertedHash.has_key?('form')
+      #Remove empty integrations section
+      begin
+        convertedHash['form'].delete('integrations')
+      rescue
+      end
+      #Iterate through all pages in form
+      convertedHash['form']['pages'].each do |page|
+        recurseIntoElements(page)
+      end
     end
   end
+  
   
   #Export to file
   File.open(fullFilePath,'w') do |f|
