@@ -81,7 +81,7 @@ end
 
 stringToRemove1 = "defaultDataSource"
 stringToRemove2 = "choicesDataSource"
-$arrayOfStringToRemove = [stringToRemove1, stringToRemove2]
+$arrayOfStringToRemove = [stringToRemove1, stringToRemove2, 'choicesResourceProperty']
 
 puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
 startingUrl = File.path($stdin.gets.chomp)
@@ -112,7 +112,8 @@ Dir.mkdir(destinationPath) unless Dir.exist?(destinationPath)
 $FileList.each do |file|
   puts file
   #Confirm directory of destination already exists - create if missing
-  directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
+  #directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
+  directoryPath = File.path(file).gsub(startingUrl, destinationPath)
   fullFilePath = File.join(directoryPath,File.basename(file))
   puts "New file: #{fullFilePath}"
   #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
