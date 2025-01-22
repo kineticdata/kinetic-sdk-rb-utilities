@@ -113,7 +113,7 @@ $FileList.each do |file|
   puts file
   #Confirm directory of destination already exists - create if missing
   #directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
-  directoryPath = File.path(file).gsub(startingUrl, destinationPath)
+  directoryPath = File.dirname(File.path(file).gsub(startingUrl, destinationPath))
   fullFilePath = File.join(directoryPath,File.basename(file))
   puts "New file: #{fullFilePath}"
   #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
