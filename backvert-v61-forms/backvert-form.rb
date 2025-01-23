@@ -84,14 +84,22 @@ stringToRemove2 = "choicesDataSource"
 $arrayOfStringToRemove = [stringToRemove1, stringToRemove2, 'choicesResourceProperty']
 
 puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
-startingUrl = File.path($stdin.gets.chomp)
-if startingUrl[-1] == File::SEPARATOR
+startingUrl = File.path($stdin.gets.chomp).gsub('"','')
+if startingUrl[-1] == File::SEPARATOR #If trailing /
   #Remove trailing slash 
   startingUrl = startingUrl.chop
+  baseUrl = File.dirname(startingUrl)
+  filename = File.basename(startingUrl)
+elsif File.file?(startingUrl) #If single file
+  baseUrl = File.dirname(startingUrl)
+  filename = File.basename(startingUrl)
+else #All other cases - Typical
+  baseUrl = startingUrl
 end
 
 puts "Type destination folder(ex: C:/results)"
 destinationPath = File.path($stdin.gets.chomp)
+destinationPath = File.path(destinationPath + '/') if destinationPath[-1] != '/'
 
 
 #Global array
@@ -102,7 +110,7 @@ $FolderList = []
 puts "Building file list"
 retrieveFormFiles(startingUrl)
 puts "Converting files"
-createDestinationDirectory(startingUrl,destinationPath)
+createDestinationDirectory(baseUrl,destinationPath)
 #Read file
 puts "Files #{$FileList}"
 
@@ -113,8 +121,8 @@ $FileList.each do |file|
   puts file
   #Confirm directory of destination already exists - create if missing
   #directoryPath = File.dirname(File.path(file).gsub(startingUrl,destinationPath))
-  directoryPath = File.dirname(File.path(file).gsub(startingUrl, destinationPath))
-  fullFilePath = File.join(directoryPath,File.basename(file))
+  fullFilePath = File.path(file).gsub(baseUrl, destinationPath)
+  directoryPath = File.dirname(fullFilePath)
   puts "New file: #{fullFilePath}"
   #Dir.mkdir(directoryPath) unless Dir.exist?(directoryPath)
   preconvertedFile = File.read(file)
