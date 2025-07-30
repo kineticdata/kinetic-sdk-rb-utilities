@@ -1,3 +1,7 @@
+# update-handlers
+
+-  Added script to update handler properties such as username and password
+
 # export_inport_kapp
 
 -  Added script to export and import kapps

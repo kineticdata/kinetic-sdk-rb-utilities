@@ -1,0 +1,15 @@
+SPACE_URL: https://demo.kinops.io
+SPACE_USERNAME: 
+SPACE_PASSWORD: 
+OPTIONS:
+  LOG_LEVEL: "DEBUG"
+  LOG_OUTPUT: "stderr"
+  LIMIT: 999 # Limit of records to return (there is no pagination)
+SEARCH_OPTIONS: # This section is used to filter tasks based on their definition ID.
+    DEFINITION_ID_STARTS_WITH: "kinetic_task" # This will match tasks that start with "kinetic_task"
+  # DEFINITION_ID_CONTAINS: "kinetic" # Uncomment this line to match tasks that contain "kinetic" anywhere in their definition ID.
+REPLACEMENTS: # This section is used to replace values in the task definition.
+  api_username: "portal_admin"
+  api_password: "K1n3T1cDat#"
+  api_server: "https://service-portal.ocio-dev2.edc.usda.gov"
+  api_location: "https://service-portal.ocio-dev2.edc.usda.gov/app/components/task/app/api/v1"
