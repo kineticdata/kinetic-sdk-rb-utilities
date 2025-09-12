@@ -1,0 +1,12 @@
+---
+core:
+  # server_url: https://<SPACE>.kinops.io  OR https://<SERVER_NAME>.com/kinetic/<SPACE_SLUG>
+  server_url: 
+  space_slug: service-portal
+  space_name: Service Portal
+  service_user_username: 
+  service_user_password: 
+options:
+  # When using conecctions and integrations, you must provide an OAuth Client ID and Secret.
+  oauth_client_id: 
+  oauth_client_secret: 

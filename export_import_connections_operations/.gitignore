@@ -1,0 +1,3 @@
+/exports/*.json
+/config/*.yml
+!/config/sample_config.yml
