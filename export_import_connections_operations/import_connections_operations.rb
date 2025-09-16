@@ -134,9 +134,11 @@ def process_connection(integrator, connection_data, dry_run = false, skip_existi
   connection_name = connection_data["name"]
   
   # clientSecret and password should be empty for import
-  connection_data["config"]["auth"]["clientSecret"] = "" if connection_data["config"]["auth"].key?("clientSecret")
-  connection_data["config"]["auth"]["password"] = "" if connection_data["config"]["auth"].key?("password")
-
+  if connection_data["config"].key?("auth") && connection_data["config"]["auth"].is_a?(Hash)
+    connection_data["config"]["auth"]["clientSecret"] = "" if connection_data["config"]["auth"].key?("clientSecret")
+    connection_data["config"]["auth"]["password"] = "" if connection_data["config"]["auth"].key?("password")
+    connection_data["config"]["auth"]["token"] = "" if connection_data["config"]["auth"].key?("token")
+  end
   logger.info "Processing connection: #{connection_name} (#{connection_id})"
   
   if dry_run
@@ -177,7 +179,7 @@ def process_connection(integrator, connection_data, dry_run = false, skip_existi
     create_response = integrator.add_connection(create_data)
     
 puts JSON.pretty_generate( create_data)
-    if create_response.status == 201
+    if create_response.status == 200
       logger.info "  Successfully created connection: #{connection_name}"
       return { status: "success", action: "created" }
     else
@@ -236,7 +238,7 @@ def process_operation(integrator, operation_data, dry_run = false, skip_existing
     
     create_response = integrator.add_operation(connection_id, create_data)
     
-    if create_response.status == 201
+    if create_response.status == 200
       logger.info "  Successfully created operation: #{operation_name}"
       return { status: "success", action: "created" }
     else

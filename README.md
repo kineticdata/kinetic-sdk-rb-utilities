@@ -1,4 +1,7 @@
-# export_inport_kapp
+# export_import_connections_operations
+- Added scripts to export and import connections and operations
+
+# export_import_kapp
 
 -  Added script to export and import kapps
 
