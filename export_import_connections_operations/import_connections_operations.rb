@@ -134,7 +134,6 @@ def process_connection(integrator, connection_data, dry_run = false, skip_existi
   connection_name = connection_data["name"]
   
   # clientSecret and password should be empty for import
-  puts connection_data["config"].pretty_inspect
   if connection_data["config"].key?("auth") && connection_data["config"]["auth"].is_a?(Hash)
     connection_data["config"]["auth"]["clientSecret"] = "" if connection_data["config"]["auth"].key?("clientSecret")
     connection_data["config"]["auth"]["password"] = "" if connection_data["config"]["auth"].key?("password")
