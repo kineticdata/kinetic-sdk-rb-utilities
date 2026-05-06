@@ -85,6 +85,8 @@ $arrayOfStringToRemove = [stringToRemove1, stringToRemove2, 'choicesResourceProp
 
 puts 'Type full file/folder path(ex: C:/my files/file.json OR C:/my files)'
 startingUrl = File.path($stdin.gets.chomp).gsub('"','')
+startingUrl = File.expand_path(startingUrl)
+puts startingUrl
 if startingUrl[-1] == File::SEPARATOR #If trailing /
   #Remove trailing slash 
   startingUrl = startingUrl.chop
